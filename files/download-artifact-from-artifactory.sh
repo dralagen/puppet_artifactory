@@ -13,7 +13,6 @@ usage: $0 options
 This script will fetch an artifact from a Artifactory server using the Artifactory REST redirect service.
 
 OPTIONS:
-   -h    Show this message
    -v    Verbose
    -t    Timestamped SNAPSHOTs
    -a    GAV coordinate groupId:artifactId:version
@@ -24,6 +23,7 @@ OPTIONS:
    -u    Username
    -p    Password
    -n    Artifactory Base URL
+   -h    Artifactory url
 
 EOF
 }
@@ -108,13 +108,9 @@ TIMESTAMPED_SNAPSHOT=0
 
 OUTPUT=
 
-while getopts "hvta:c:e:o:r:u:p:n:" OPTION
+while getopts "vta:c:e:o:r:u:p:n:h:" OPTION
 do
     case $OPTION in
-        h)
-            usage
-            exit 1
-            ;;
         a)
             OIFS=$IFS
             IFS=":"
@@ -149,6 +145,9 @@ do
             PASSWORD=$OPTARG
             ;;
         n)
+            ARTIFACTORY_BASE=$OPTARG
+            ;;
+        h)
             ARTIFACTORY_BASE=$OPTARG
             ;;
         ?)
