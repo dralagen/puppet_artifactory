@@ -80,7 +80,7 @@ function get_timestamp_and_build()
     local __build=
 
     # Retrieve the maven-metadata.xml file
-    curl -sS -f -L ${__request_url} -o ${__maven_metadata} ${CURL_VERBOSE} --location-trusted
+    curl -sS -f -L ${__request_url} -o ${__maven_metadata} ${AUTHENTICATION} ${CURL_VERBOSE} --location-trusted
     # Command to extract the timestamp
     __ts=`cat ${__maven_metadata} | tr -d [:space:] | grep -o "<timestamp>.*</timestamp>" \
         | tr '<>' '  ' | awk '{ print $2 }'`
@@ -197,6 +197,13 @@ fi
 ARTIFACT_BASE_URL=${ARTIFACTORY_BASE}${URL_BASE}/${REPO}/${GROUP_ID}/${ARTIFACT_ID}/${VERSION}
 ARTIFACT_TARGET_NAME=$( artifact_target_name ${ARTIFACT_ID} ${VERSION} ${PACKAGING} ${CLASSIFIER} )
 
+# Authentication
+AUTHENTICATION=
+if [[ "$USERNAME" != "" ]]  && [[ "$PASSWORD" != "" ]]
+then
+    AUTHENTICATION="-u $USERNAME:$PASSWORD"
+fi
+
 if [[ "${VERSION}" =~ "SNAPSHOT" ]] && [[ ${TIMESTAMPED_SNAPSHOT} -ne 0 ]]
 then
     ARTIFACT_SOURCE_NAME=$( artifact_source_name ${ARTIFACT_BASE_URL} ${ARTIFACT_ID} ${VERSION} ${PACKAGING} ${CLASSIFIER} )
@@ -212,13 +219,6 @@ then
 fi
 
 REQUEST_URL="${ARTIFACT_BASE_URL}/${ARTIFACT_SOURCE_NAME}"
-
-# Authentication
-AUTHENTICATION=
-if [[ "$USERNAME" != "" ]]  && [[ "$PASSWORD" != "" ]]
-then
-    AUTHENTICATION="-u $USERNAME:$PASSWORD"
-fi
 
 # Output
 OUT=
