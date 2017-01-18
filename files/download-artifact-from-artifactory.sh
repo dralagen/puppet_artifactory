@@ -13,6 +13,7 @@ usage: $0 options
 This script will fetch an artifact from a Artifactory server using the Artifactory REST redirect service.
 
 OPTIONS:
+   -?    This page
    -v    Verbose
    -t    Timestamped SNAPSHOTs
    -a    GAV coordinate groupId:artifactId:version
